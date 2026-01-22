@@ -313,6 +313,8 @@
         .about-title {
             font-size: 18vw; /* Un poco más grande para que impacte en móvil */
             line-height: 1;
+            margin-top: 15%;
+
         }
 
         .name-line:nth-child(2) {
