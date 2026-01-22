@@ -17,40 +17,54 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Lógica de Scroll
     window.addEventListener('scroll', () => {
-        const scrolled = window.scrollY;
+        const scrollPos = window.scrollY;
+        const header = document.querySelector('header');
+        const videoSection = document.querySelector('.video-gallery-section');
 
-        // Paralaje del título principal si existe
-       if (aboutSection && largeImgElement) {
+        // 1. Paralaje del video
+        if (aboutSection && largeImgElement) {
             const sectionTop = aboutSection.offsetTop;
             const sectionHeight = aboutSection.offsetHeight;
-            const scrolled = window.scrollY;
-
-            // Solo aplicar si estamos dentro de la sección
-            if (scrolled >= sectionTop - window.innerHeight && scrolled <= sectionTop + sectionHeight) {
-                const relativeScroll = scrolled - sectionTop;
+            if (scrollPos >= sectionTop - window.innerHeight && scrollPos <= sectionTop + sectionHeight) {
+                const relativeScroll = scrollPos - sectionTop;
                 largeImgElement.style.transform = `translateY(${relativeScroll * -0.05}px)`;
             }
         }
-    });
-
-    // Scroll suave al hacer click en el indicador
-    if (scrollIndicator && aboutSection) {
-        scrollIndicator.addEventListener('click', () => {
-            aboutSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
-    }
 
-    window.addEventListener('scroll', () => {
-    const header = document.querySelector('header');
-    const videoSection = document.querySelector('.video-gallery-section');
-    const scrollPos = window.scrollY;
+        // Scroll suave al hacer click en el indicador
+        if (scrollIndicator && aboutSection) {
+            scrollIndicator.addEventListener('click', () => {
+                aboutSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        }
 
-    if (videoSection && scrollPos >= videoSection.offsetTop - 50) {
-        header.style.mixDifference = "difference"; // Esto hace que el color se invierta automáticamente
-        // O más simple:
-        header.querySelectorAll('a, span').forEach(el => el.style.color = "#0318F8");
-    } else {
-        header.querySelectorAll('a, span').forEach(el => el.style.color = "#ffffff");
-    }
-});
+       window.addEventListener('scroll', () => {
+        const scrollPos = window.scrollY;
+        const header = document.querySelector('header');
+        const videoSection = document.querySelector('.video-gallery-section');
+        const finalSection = document.querySelector('.final-cta-section');
+
+        // 1. Paralaje del video
+        if (aboutSection && largeImgElement) {
+            const sectionTop = aboutSection.offsetTop;
+            const sectionHeight = aboutSection.offsetHeight;
+            if (scrollPos >= sectionTop - window.innerHeight && scrollPos <= sectionTop + sectionHeight) {
+                const relativeScroll = scrollPos - sectionTop;
+                largeImgElement.style.transform = `translateY(${relativeScroll * -0.05}px)`;
+            }
+        }
+
+        // 2. Cambio de color del Header inteligente (Sin duplicados)
+        if (videoSection && finalSection) {
+            // Detectamos si estamos en la zona blanca (desde galería hasta antes del final rojo)
+            const isLightSection = scrollPos >= videoSection.offsetTop - 50 && scrollPos < finalSection.offsetTop - 50;
+            
+            if (isLightSection) {
+                header.querySelectorAll('a, span').forEach(el => el.style.color = "#0318F8");
+            } else {
+                header.querySelectorAll('a, span').forEach(el => el.style.color = "#ffffff");
+            }
+        }
+    });
 });
